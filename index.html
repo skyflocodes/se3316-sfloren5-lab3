@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SE 3316 Lab 2</title>
+<meta name="description" content="Lab 3 for SE 3316">
+<meta name="author" content="sfloren5">
+<!--Css Stylesheet Link-->
+<link rel="stylesheet" href="style.css">
+<!--Javascript code link-->
+<script src="script.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Title and search Functions -->
+<h1>SE 3316 Lab 3</h1>
+<div>
+    <!--Hero Search Bar-->
+<div class="input-container">
+    <label id="HeroSearch">Search For Hero:</label>
+    <input type="text" id="heroInput" placeholder="Enter hero name..." maxlength="20" oninput="validateHeroInput()" >
+    <button onclick="search('hero')">Search</button>
+</div>
+    <!--Results ul-->
+<div id="searchResultsContainer">
+  </div>
+</div>
+<!-- Hero List -->
+<div>
+<ul>
+    <li class="hero"><div class="hero">
+        <h3 class="name">Captian America 2</h3>
+        <p class="description">
+            ID: 4<br>
+            Race: Human<br>
+            Publisher: Marvel
+        </p>
+    </div></li>
+    <li class="hero"><div>
+        <h3 class="name">Teenage Mutant Ninja Turtles</h3>
+        <p class="description">
+            ID: 4<br>
+            Race: Human<br>
+            Publisher: Marvel
+        </p>
+    </div></li>
+    <li class="hero"><div>
+        <h3 class="name">A-Bomb</h3>
+        <p class="description">
+            ID: 4<br>
+            Race: Human<br>
+            Publisher: Marvel
+        </p>
+    </div></li>
+</ul>
+</div>
+</body>
+</html>

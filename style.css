@@ -1,0 +1,113 @@
+/*body styling, going for a dark-modern vibe*/
+body {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+}
+
+/*header size to 44px*/
+h1 {
+    font-size: 44px;
+}
+
+/*align thew input containers, to make it fit next to eachother*/
+.input-container {
+    display: flex; 
+    align-items: center; 
+    max-width: 100%; 
+}
+
+/*styling for searchbars*/
+ input{
+    background-color: #444;
+    color: #fff;
+    border: none;
+    flex: 1; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    width: 70%; 
+    margin-right: 10px; 
+    margin-left: 10px;
+}
+
+/*styling for buttons*/
+button {
+    background-color: #0078d4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    width: 30%; 
+} button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for unordered list */
+ul {
+align-content: center;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(250px, 0));
+}
+
+/*styling hero list items*/
+li {
+    padding: 20px;
+    background-color: #333; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    max-width: 320px;
+    margin: 10px 10px;
+    overflow: hidden;
+} li:hover {
+    background-color: #444;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3); 
+    z-index: 1;
+}
+
+/*styling h3's*/
+h3 {
+    font-size: 20px;
+    color: #fff;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+/*styling for paragraphs*/
+p {
+    font-size: 16px;
+    margin: 0;
+    margin-top: 10px;
+    color: #ccc;
+}
+
+/*stlying for links*/
+a {
+    color: #0078d4;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+} a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Styling for search results container */
+#searchResultsContainer {
+    background-color: #444;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+/* Styling for individual search result items */
+#searchResultsList li {
+    margin-bottom: 10px;
+    padding: 0;
+}
