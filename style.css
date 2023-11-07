@@ -11,13 +11,6 @@ h1 {
     font-size: 44px;
 }
 
-/*align thew input containers, to make it fit next to eachother*/
-.input-container {
-    display: flex; 
-    align-items: center; 
-    max-width: 100%; 
-}
-
 /*styling for searchbars*/
  input{
     background-color: #444;
@@ -33,6 +26,23 @@ h1 {
     margin-left: 10px;
 }
 
+/*styling for dropdown*/
+select {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/*styling for labels*/
+label {
+margin-left: 1%;
+}
+
 /*styling for buttons*/
 button {
     background-color: #0078d4;
@@ -43,7 +53,6 @@ button {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-    width: 30%; 
 } button:hover {
     background-color: #0056b3;
 }
@@ -53,22 +62,6 @@ ul {
 align-content: center;
 display: grid;
 grid-template-columns: repeat(auto-fill, minmax(250px, 0));
-}
-
-/*styling hero list items*/
-li {
-    padding: 20px;
-    background-color: #333; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    max-width: 320px;
-    margin: 10px 10px;
-    overflow: hidden;
-} li:hover {
-    background-color: #444;
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3); 
-    z-index: 1;
 }
 
 /*styling h3's*/
@@ -97,6 +90,18 @@ a {
     text-decoration: underline;
 }
 
+/*align thew input containers, to make it fit next to eachother*/
+.input-container {
+    display: flex; 
+    align-items: center; 
+    max-width: 100%; 
+}
+
+/*styling for selects*/
+.selects {
+    margin-bottom: 20px;
+}
+
 /* Styling for search results container */
 #searchResultsContainer {
     background-color: #444;
@@ -110,4 +115,29 @@ a {
 #searchResultsList li {
     margin-bottom: 10px;
     padding: 0;
+}
+
+/*styling hero list items*/
+li.hero {
+    padding: 20px;
+    background-color: #333; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    max-width: 320px;
+    margin: 10px 10px;
+    overflow: hidden;
+} li.hero:hover {
+    background-color: #444;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3); 
+    z-index: 1;
+}
+
+/*styling for powerlist*/
+.powers {
+    margin: 0;
+    display: none;
+    list-style: none;
+} li:hover .powers {
+    display: block;
 }

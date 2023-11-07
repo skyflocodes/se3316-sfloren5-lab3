@@ -16,41 +16,60 @@
 <h1>SE 3316 Lab 3</h1>
 <div>
     <!--Hero Search Bar-->
-<div class="input-container">
-    <label id="HeroSearch">Search For Hero:</label>
-    <input type="text" id="heroInput" placeholder="Enter hero name..." maxlength="20" oninput="validateHeroInput()" >
-    <button onclick="search('hero')">Search</button>
-</div>
+    <div class="selects">
+        <label for="searchType">Search By:</label>
+        <select name="searchType" id="searchType">
+            <option value="name">Name</option>
+            <option value="publisher">Publisher</option>
+            <option value="race">Race</option>
+            <option value="power">Power</option>
+        </select>
+        <label for="sortType">Sort By:</label>
+        <select name="sortType" id="sortType">
+            <option value="name">Name</option>
+            <option value="publisher">Publisher</option>
+            <option value="race">Race</option>
+            <option value="power">Power</option>
+        </select>
+    </div>
+    <div class="input-container">
+        <input type="text" id="heroInput" maxlength="20" oninput="validateHeroInput()" >
+        <button onclick="search('hero')">Search</button>
+    </div>
     <!--Results ul-->
-<div id="searchResultsContainer">
-  </div>
+    <div id="searchResultsContainer">
+    </div>
 </div>
 <!-- Hero List -->
 <div>
 <ul>
-    <li class="hero"><div class="hero">
-        <h3 class="name">Captian America 2</h3>
-        <p class="description">
-            ID: 4<br>
-            Race: Human<br>
-            Publisher: Marvel
-        </p>
+    <li class="hero"><div>
+        <h3 class="name">Batman</h3>
+        <p>ID:<br>
+        Race:<br>
+        Publisher:<br></p>
+        <p class="powers"><strong>Powers:</strong></p>
     </div></li>
     <li class="hero"><div>
-        <h3 class="name">Teenage Mutant Ninja Turtles</h3>
-        <p class="description">
-            ID: 4<br>
-            Race: Human<br>
-            Publisher: Marvel
-        </p>
+        <h3 class="name">Batman</h3>
+        <p>ID:<br>
+        Race:<br>
+        Publisher:<br></p>
+        <p class="powers"><strong>Powers:</strong></p>
     </div></li>
     <li class="hero"><div>
-        <h3 class="name">A-Bomb</h3>
-        <p class="description">
-            ID: 4<br>
-            Race: Human<br>
-            Publisher: Marvel
-        </p>
+        <h3 class="name">Batman</h3>
+        <p>ID:<br>
+        Race:<br>
+        Publisher:<br></p>
+        <p class="powers"><strong>Powers:</strong></p>
+    </div></li>
+    <li class="hero"><div>
+        <h3 class="name">Batman</h3>
+        <p>ID:<br>
+        Race:<br>
+        Publisher:<br></p>
+        <p class="powers"><strong>Powers:</strong></p>
     </div></li>
 </ul>
 </div>
