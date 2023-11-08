@@ -33,21 +33,13 @@
         </select>
     </div>
     <div class="input-container">
-        <input type="text" id="heroInput" maxlength="20" oninput="validateHeroInput()" >
-        <button onclick="search('hero')">Search</button>
+        <input type="text" id="heroInput" maxlength="20">
+        <button onclick="searchHero('hero')">Search</button>
     </div>
 </div>
 <!-- Hero List -->
-<div id = "heroList">
-<ul>
-    <li class="hero"><div>
-        <h3 class="name">Abomination</h3>
-        <p>ID: 3<br>
-        Race: Human / Radiation<br>
-        Publisher: Marvel Comics<br></p>
-        <p class="powers"><strong>Powers:</strong><br>
-            Accelerated Healing, Intelligence, Super Strength, Stamina, Super Speed, Invulnerability, Animation, Super Breath</p>
-    </div></li>
+<div>
+<ul id = "heroes-list">
 </ul>
 </div>
 </body>
