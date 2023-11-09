@@ -1,10 +1,6 @@
-// Initial fetch and render superheroes when the page loads.
-document.addEventListener("DOMContentLoaded", function () {
-  fetchAndRenderSuperheroes("");
-});
-
-// Fetch and render superheroes based on search query.
+// Function to fetch and render superheroes based on search query.
 function fetchAndRenderSuperheroes(searchQuery) {
+  // Get search and sort characteristics from HTML elements
   const searchCharacteristic = document.getElementById("searchType").value;
   const sortCharacteristic = document.getElementById("sortType").value;
 
@@ -34,7 +30,7 @@ function fetchAndRenderSuperheroes(searchQuery) {
     });
 }
 
-// Create HTML elements for a hero.
+// Function to create HTML elements for a hero.
 function createHeroElement(heroData) {
   const heroListItem = document.createElement("li");
   heroListItem.className = "hero";
@@ -61,8 +57,13 @@ function createHeroElement(heroData) {
   return heroListItem;
 }
 
-// Trigger search when "Search" button is clicked.
+// Function to trigger search when "Search" button is clicked.
 function searchHero() {
   const searchQuery = document.getElementById("heroInput").value;
   fetchAndRenderSuperheroes(searchQuery);
 }
+
+// Event listener for when the page loads to fetch and render superheroes.
+document.addEventListener("DOMContentLoaded", function () {
+  fetchAndRenderSuperheroes("");
+});
