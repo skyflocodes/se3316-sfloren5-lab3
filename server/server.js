@@ -2,7 +2,6 @@ const express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
-const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { query, validationResult } = require('express-validator');
 
@@ -10,7 +9,6 @@ const app = express();
 const port = 3000;
 
 // Middlewares
-app.use(cors());
 app.use(express.json()); // Duplicate line from below was removed
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
@@ -64,8 +62,13 @@ async function startServer() {
 }
 
     app.post('/api/lists', async (req, res) => {
-        const { listName } = req.body; // The user provides a listName in the body
-      
+        const { listName } = req.body;
+
+        // Check for minimum length and allowed characters
+        if (listName.length < 3 || !/^[a-z\d ]+$/i.test(listName)) {
+          return res.status(400).json({ message: 'List name must be at least 3 characters long and contain only alphanumeric characters and spaces.' });
+        }
+
         try {
           const listsCollection = client.db('superheroesDB').collection('lists');
           // Check if a list with the same name already exists
@@ -84,9 +87,13 @@ async function startServer() {
 
       app.get('/api/lists/:listName', async (req, res) => {
         const { listName } = req.params;
-      
         try {
           const listsCollection = client.db('superheroesDB').collection('lists');
+
+          // Check for minimum length and allowed characters
+        if (listName.length < 3 || !/^[a-z\d ]+$/i.test(listName)) {
+          return res.status(400).json({ message: 'List name must be at least 3 characters long and contain only alphanumeric characters and spaces.' });
+        }
           
           // Find the list by name
           const list = await listsCollection.findOne({ name: listName }, { projection: { superheroIds: 1 } });
@@ -102,9 +109,12 @@ async function startServer() {
 
       app.post('/api/lists/:listName/superheroes', async (req, res) => {
         const { listName } = req.params;
-        const { superheroId } = req.body; // The user provides a superheroId in the body
+        let { superheroId } = req.body; // The user provides a superheroId in the body
+
+        // Convert superheroId to an integer.
+        superheroId = parseInt(superheroId, 10);
       
-        if (superheroId < 0 || isNaN(superheroId) || superheroId > 733 || superheroId == null) {
+        if (superheroId < 0 || isNaN(superheroId) || superheroId > 733 || superheroId === null || superheroId == "") {
           return res.status(400).json({ message: 'Invalid superhero ID' });
         }
       
@@ -158,6 +168,11 @@ async function startServer() {
 
       app.delete('/api/lists/:listName', async (req, res) => {
         const { listName } = req.params;
+
+        // Check for minimum length and allowed characters
+        if (listName.length < 3 || !/^[a-z\d ]+$/i.test(listName)) {
+          return res.status(400).json({ message: 'List name must be at least 3 characters long and contain only alphanumeric characters and spaces.' });
+        }
       
         try {
           const listsCollection = client.db('superheroesDB').collection('lists');

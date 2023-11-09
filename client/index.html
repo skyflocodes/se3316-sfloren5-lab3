@@ -18,14 +18,14 @@
     <!--Hero Search Bar-->
     <div class="selects">
         <label for="searchType">Search By:</label>
-        <select name="searchType" id="searchType" oninput="searchHero('hero')">
+        <select name="searchType" id="searchType" oninput="searchHero()">
             <option value="name">Name</option>
             <option value="publisher">Publisher</option>
             <option value="race">Race</option>
             <option value="power">Power</option>
         </select>
         <label for="sortType">Sort By:</label>
-        <select name="sortType" id="sortType" oninput="searchHero('hero')">
+        <select name="sortType" id="sortType" oninput="searchHero()">
             <option value="name">Name</option>
             <option value="publisher">Publisher</option>
             <option value="race">Race</option>
@@ -33,19 +33,23 @@
         </select>
     </div>
     <div class="input-container">
-        <input type="text" id="heroInput" pattern="[^a-zA-Z0-9]+" maxlength="20" oninput="searchHero('hero')">
-        <input type="number" id="searchSize" min="0" max="733" value="0" oninput="searchHero('hero')">
+        <input type="text" id="heroInput" pattern="[^a-zA-Z0-9]+" maxlength="20" oninput="searchHero()">
+        <input type="number" id="searchSize" min="0" max="733" value="0" oninput="searchHero()">
     </div>
     <div id="list">
         <input type="text" id="listName" placeholder="Enter list name">
-        <button class="add" onclick="createList()">Create List</button>
-        <button class="remove" onclick="deleteList()">Delete List</button>
+        <div>
+            <button class="add" onclick="createList()">Create List</button>
+            <button id="displayListButton" onclick="displayList()">Display List</button>
+            <button class="remove" onclick="deleteList()">Delete List</button>
+        </div>
     </div>
     <div id="hero">
         <input type="number" min="0" max="733" id="superheroId" placeholder="Enter Superhero ID (0-733)">
         <button class="add" onclick="addHeroToList()">Add Hero</button>
         <button class="remove" onclick="removeHeroFromList()">Remove Hero</button>
     </div>
+    <div id="message"></div>
 </div>
 <!-- Hero List -->
 <div>

@@ -133,21 +133,8 @@ a {
 }
 
 /* Styling for search results container */
-#searchResultsContainer {
-    background-color: #444;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-/* Styling for individual search result items */
-#searchResultsList li {
-    margin-bottom: 10px;
-}
-
-#searchSize {
-    max-width: fit-content;
+#message{
+    color: red;
 }
 
 /*styling hero list items*/
