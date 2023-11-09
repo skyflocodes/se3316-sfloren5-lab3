@@ -3,9 +3,10 @@ function fetchAndRenderSuperheroes(searchQuery) {
   // Get search and sort characteristics from HTML elements
   const searchCharacteristic = document.getElementById("searchType").value;
   const sortCharacteristic = document.getElementById("sortType").value;
+  const searchSize = parseInt(document.getElementById("searchSize").value, 10);
 
   // Construct the API URL with search query and sorting.
-  let apiUrl = `http://localhost:3000/api/superheroes?${searchCharacteristic}=${searchQuery}`;
+  let apiUrl = `http://localhost:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
 
   if (sortCharacteristic) {
     apiUrl += `&sort=${sortCharacteristic}`;

@@ -114,7 +114,10 @@ a {
 /* Styling for individual search result items */
 #searchResultsList li {
     margin-bottom: 10px;
-    padding: 0;
+}
+
+#searchSize {
+    max-width: fit-content;
 }
 
 /*styling hero list items*/

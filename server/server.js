@@ -35,7 +35,7 @@ const loadSuperheroData = async () => {
 // Define an API endpoint to get a list of superheroes with optional filtering and sorting
 app.get('/api/superheroes', asyncHandler(async (req, res) => {
     const { superheroes, powers } = await loadSuperheroData();
-    const { name, power, race, publisher, sort } = req.query;
+    const { name, power, race, publisher, sort, limit } = req.query;
 
     let result = superheroes;
 
@@ -89,6 +89,12 @@ app.get('/api/superheroes', asyncHandler(async (req, res) => {
             res.status(400).json({ error: `Invalid sort field. Valid fields are: ${validSortFields.join(', ')}` });
             return;
         }
+    }
+
+    // Apply the "limit" to limit the number of results
+    if (limit) {
+        if (limit > 0)
+        result = result.slice(0, parseInt(limit, 10));
     }
 
     // Send the filtered and sorted result as JSON response
