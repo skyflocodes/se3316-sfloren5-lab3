@@ -1,72 +1,213 @@
 const express = require('express');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const { query, validationResult } = require('express-validator');
 
 const app = express();
 const port = 3000;
 
+// Middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Duplicate line from below was removed
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
-const rateLimit = require('express-rate-limit');
-
-// Apply rate limiting middleware
+// Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit to 100 requests per IP within the window
+  max: 100 // Limit each IP to 100 requests per windowMs
 });
 
 app.use('/api/', limiter);
 
-const { query, validationResult } = require('express-validator');
+// MongoDB Client Setup
+const uri = 'mongodb+srv://skyflocodes:3316@heros.zqhg1yp.mongodb.net/?retryWrites=true&w=majority';
+const client = new MongoClient(uri, {
+  serverApi: ServerApiVersion.v1
+});
 
-// Define a custom sanitizer function to allow only specified characters
-const sanitizeInput = (value) => {
-    if (typeof value === 'string') {
-      // Remove characters that are not a-z, A-Z, 0-9, hyphen (-), or period (.)
-      return value.replace(/[^a-zA-Z0-9\-\.]/g, '');
-    } else if (Array.isArray(value)) {
-      // If it's an array, sanitize each element recursively
-      return value.map((item) => sanitizeInput(item));
-    }
-    return value; // For other data types, return the value unchanged
-  };
-
-
-
-// Define file paths for superhero data
+// Data directory paths
 const DATA_DIR = path.join(__dirname, 'json');
 const SUPERHERO_INFO_FILE = path.join(DATA_DIR, 'superhero_info.json');
 const SUPERHERO_POWERS_FILE = path.join(DATA_DIR, 'superhero_powers.json');
 
-// Utility function to read and parse a JSON file
+// Utility Functions
 const readJsonFile = (filePath) => fs.promises.readFile(filePath, 'utf8').then(JSON.parse);
-
-// Async error handling wrapper for route handlers
+const sanitizeInput = (value) => value.replace(/[^a-zA-Z0-9\-\.]/g, '');
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
-// Cache the data in-memory to avoid frequent file I/O
-let cache = {};
+let cache = {}; // In-memory cache
 
-// Load superhero data into cache
 const loadSuperheroData = async () => {
   if (!cache.superheroes || !cache.powers) {
-    cache.superheroes = await readJsonFile(SUPERHERO_INFO_FILE);
-    cache.powers = await readJsonFile(SUPERHERO_POWERS_FILE);
+    [cache.superheroes, cache.powers] = await Promise.all([
+      readJsonFile(SUPERHERO_INFO_FILE),
+      readJsonFile(SUPERHERO_POWERS_FILE)
+    ]);
   }
   return cache;
 };
 
+// Database connection and server start
+async function startServer() {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+    app.listen(port, () => console.log(`Server is running on port ${port}`));
+  } catch (err) {
+    fs.writeFileSync('mongo_connection_error.log', JSON.stringify(err, null, 2));
+    console.error('Error connecting to MongoDB', err);
+    process.exit(1);
+  }
+}
+
+    app.post('/api/lists', async (req, res) => {
+        const { listName } = req.body; // The user provides a listName in the body
+      
+        try {
+          const listsCollection = client.db('superheroesDB').collection('lists');
+          // Check if a list with the same name already exists
+          const listExists = await listsCollection.findOne({ name: listName });
+          if (listExists) {
+            return res.status(409).json({ message: 'List already exists' });
+          }
+          // Create a new list with an empty array of superhero IDs
+          const newList = { name: listName, superheroIds: [] };
+          await listsCollection.insertOne(newList);
+          res.status(201).json(newList);
+        } catch (error) {
+          res.status(500).json({ message: 'Internal Server Error', details: error.message  });
+        }
+      });
+
+      app.get('/api/lists/:listName', async (req, res) => {
+        const { listName } = req.params;
+      
+        try {
+          const listsCollection = client.db('superheroesDB').collection('lists');
+          
+          // Find the list by name
+          const list = await listsCollection.findOne({ name: listName }, { projection: { superheroIds: 1 } });
+          if (!list) {
+            return res.status(404).json({ message: 'List not found' });
+          }
+      
+          res.status(200).json(list.superheroIds);
+        } catch (error) {
+          res.status(500).json({ message: 'Internal Server Error', details: error.message  });
+        }
+      });
+
+      app.post('/api/lists/:listName/superheroes', async (req, res) => {
+        const { listName } = req.params;
+        const { superheroId } = req.body; // The user provides a superheroId in the body
+      
+        if (superheroId < 0 || isNaN(superheroId) || superheroId > 733 || superheroId == null) {
+          return res.status(400).json({ message: 'Invalid superhero ID' });
+        }
+      
+        try {
+          const listsCollection = client.db('superheroesDB').collection('lists');
+          // Add the superhero ID to the list if it doesn't already contain it
+          const updateResult = await listsCollection.updateOne(
+            { name: listName, superheroIds: { $ne: superheroId } },
+            { $push: { superheroIds: superheroId } }
+          );
+      
+          if (updateResult.matchedCount === 0) {
+            return res.status(404).json({ message: 'List not found' });
+          }
+      
+          if (updateResult.modifiedCount === 0) {
+            return res.status(409).json({ message: 'Superhero ID already in the list' });
+          }
+      
+          res.status(200).json({ message: 'Superhero ID added to the list' });
+        } catch (error) {
+          res.status(500).json({ message: 'Internal Server Error', details: error.message });
+        }
+      });
+
+      app.delete('/api/lists/:listName/superheroes/:superheroId', async (req, res) => {
+        const { listName } = req.params;
+        const superheroId = parseInt(req.params.superheroId, 10);
+      
+        try {
+          const listsCollection = client.db('superheroesDB').collection('lists');
+          // Remove the superhero ID from the list
+          const updateResult = await listsCollection.updateOne(
+            { name: listName },
+            { $pull: { superheroIds: superheroId } }
+          );
+      
+          if (updateResult.matchedCount === 0) {
+            return res.status(404).json({ message: 'List not found' });
+          }
+      
+          if (updateResult.modifiedCount === 0) {
+            return res.status(409).json({ message: 'Superhero ID not in the list' });
+          }
+      
+          res.status(200).json({ message: 'Superhero ID removed from the list' });
+        } catch (error) {
+          res.status(500).json({ message: 'Internal Server Error', details: error.message });
+        }
+      });      
+
+      app.delete('/api/lists/:listName', async (req, res) => {
+        const { listName } = req.params;
+      
+        try {
+          const listsCollection = client.db('superheroesDB').collection('lists');
+          
+          // Delete the list by name
+          const result = await listsCollection.deleteOne({ name: listName });
+          if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'List not found' });
+          }
+      
+          res.status(200).json({ message: 'List deleted' });
+        } catch (error) {
+          res.status(500).json({ message: 'Internal Server Error', details: error.message  });
+        }
+      });
+
+      app.get('/api/lists/:listName/details', async (req, res) => {
+        const { listName } = req.params;
+        try {
+            const listsCollection = client.db('superheroesDB').collection('lists');
+            const list = await listsCollection.findOne({ name: listName });
+    
+            if (!list) {
+                return res.status(404).json({ message: 'List not found' });
+            }
+    
+            // Fetch the superhero details for each ID
+            const superheroesDetails = await Promise.all(list.superheroIds.map(async (id) => {
+                return await getSuperheroById(id); // This uses the local function instead of fetchSuperheroById
+            }));
+    
+            // Filter out any undefined entries if a superhero was not found
+            const details = superheroesDetails.filter(Boolean);
+    
+            res.status(200).json(details);
+        } catch (error) {
+            res.status(500).json({ message: 'Internal Server Error', details: error.message  });
+        }
+    });
+
 // Define an API endpoint to get a list of superheroes with optional filtering and sorting
 app.get('/api/superheroes',
 [
-  query('name').optional().isString().trim().customSanitizer(sanitizeInput),
-  query('power').optional().isString().trim().customSanitizer(sanitizeInput),
-  query('race').optional().isString().trim().customSanitizer(sanitizeInput),
-  query('publisher').optional().isString().trim().customSanitizer(sanitizeInput),
-  query('sort').optional().isString().trim().customSanitizer(sanitizeInput),
-  query('limit').optional().isInt({ min: 0, max: 999 }),
+    query('id').optional().isInt({ min: 0, max: 733 }),
+    query('name').optional().isString().trim().customSanitizer(sanitizeInput),
+    query('power').optional().isString().trim().customSanitizer(sanitizeInput),
+    query('race').optional().isString().trim().customSanitizer(sanitizeInput),
+    query('publisher').optional().isString().trim().customSanitizer(sanitizeInput),
+    query('sort').optional().isString().trim().customSanitizer(sanitizeInput),
+    query('limit').optional().isInt({ min: 0, max: 733 }),
 ], asyncHandler(async (req, res) => {
     // Validate query parameters
     const errors = validationResult(req);
@@ -74,7 +215,7 @@ app.get('/api/superheroes',
       return res.status(400).json({ errors: errors.array() });
     }
     const { superheroes, powers } = await loadSuperheroData();
-    const { name, power, race, publisher, sort, limit } = req.query;
+    const { id, name, power, race, publisher, sort, limit } = req.query;
 
     let result = superheroes;
 
@@ -95,10 +236,16 @@ app.get('/api/superheroes',
     if (name) {
         result = result.filter(hero => hero.name && hero.name.toLowerCase().includes(name.toLowerCase()));
     }
+
+    if(id){
+        const numericId = parseInt(id, 10);
+        result = result.filter(hero => hero.id && hero.id === numericId);
+    }
+
     if (publisher) {
         result = result.filter(hero => hero.Publisher && hero.Publisher.toLowerCase().includes(publisher.toLowerCase()));
     }
-    
+
     if (race) {
         result = result.filter(hero => hero.Race && hero.Race.toLowerCase().includes(race.toLowerCase()));
     }
@@ -143,10 +290,7 @@ app.get('/api/superheroes',
 // Generic error handler middleware for the application
 app.use((error, req, res, next) => {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error', details: error.message  });
 });
 
-// Start the server and listen on the defined port
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+startServer();

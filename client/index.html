@@ -34,7 +34,17 @@
     </div>
     <div class="input-container">
         <input type="text" id="heroInput" pattern="[^a-zA-Z0-9]+" maxlength="20" oninput="searchHero('hero')">
-        <input type="number" id="searchSize" min="0" max="999" value="0" oninput="searchHero('hero')">
+        <input type="number" id="searchSize" min="0" max="733" value="0" oninput="searchHero('hero')">
+    </div>
+    <div id="list">
+        <input type="text" id="listName" placeholder="Enter list name">
+        <button class="add" onclick="createList()">Create List</button>
+        <button class="remove" onclick="deleteList()">Delete List</button>
+    </div>
+    <div id="hero">
+        <input type="number" min="0" max="733" id="superheroId" placeholder="Enter Superhero ID (0-733)">
+        <button class="add" onclick="addHeroToList()">Add Hero</button>
+        <button class="remove" onclick="removeHeroFromList()">Remove Hero</button>
     </div>
 </div>
 <!-- Hero List -->

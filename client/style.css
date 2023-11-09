@@ -57,6 +57,36 @@ button {
     background-color: #0056b3;
 }
 
+.add {
+    background-color: #28a745; /* Green background */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.add:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.remove {
+    background-color: #dc3545; /* Red background */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.remove:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
 /* Styling for unordered list */
 ul {
 align-content: center;

@@ -1,0 +1,15 @@
+{
+  "reason": {
+    "type": "ReplicaSetNoPrimary",
+    "servers": {},
+    "stale": false,
+    "compatible": true,
+    "heartbeatFrequencyMS": 10000,
+    "localThresholdMS": 15,
+    "setName": "atlas-11ejtf-shard-0",
+    "maxElectionId": null,
+    "maxSetVersion": null,
+    "commonWireVersion": 0,
+    "logicalSessionTimeoutMinutes": 30
+  }
+}
