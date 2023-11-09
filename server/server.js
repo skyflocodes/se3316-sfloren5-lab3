@@ -34,7 +34,7 @@ const loadSuperheroData = async () => {
 // Endpoint to get a list of all superheroes or filter by query parameters
 app.get('/api/superheroes', asyncHandler(async (req, res) => {
     const { superheroes, powers } = await loadSuperheroData();
-    const { name, power, race, publisher } = req.query;
+    const { name, power, race, publisher, sort } = req.query;
 
     let result = superheroes;
 
@@ -67,6 +67,29 @@ app.get('/api/superheroes', asyncHandler(async (req, res) => {
         result = result.filter(hero => {
             return hero.powers.some(heroPower => heroPower.toLowerCase().includes(power.toLowerCase()));
         });
+    }
+
+    // Add sorting based on query parameters
+    if (sort) {
+        const validSortFields = ['name', 'race', 'publisher', 'power'];
+        if (validSortFields.includes(sort.toLowerCase())) {
+            result.sort((a, b) => {
+                // If sorting by powers, compare the length of the powers array
+            if (sort.toLowerCase() === 'power') {
+                return a.powers.length - b.powers.length;
+            } else {
+                // For other fields, use the existing localeCompare method
+                let fieldA = a[sort.charAt(0).toUpperCase() + sort.slice(1)];
+                let fieldB = b[sort.charAt(0).toUpperCase() + sort.slice(1)];
+                fieldA = fieldA ? fieldA.toString() : '';
+                fieldB = fieldB ? fieldB.toString() : '';
+                return fieldA.localeCompare(fieldB);
+            }
+            });
+        } else {
+            res.status(400).json({ error: `Invalid sort field. Valid fields are: ${validSortFields.join(', ')}` });
+            return;
+        }
     }
 
     res.json(result);

@@ -1,73 +1,68 @@
+// Initial fetch and render superheroes when the page loads.
 document.addEventListener("DOMContentLoaded", function () {
-    fetchAndRenderSuperheroes();
-  });
+  fetchAndRenderSuperheroes("");
+});
 
-  function fetchAndRenderSuperheroes(searchQuery) {
-    console.log("Searching for:", searchQuery);
-    // Define the URL based on the selected search characteristic and the input query
-    const searchCharacteristic = document.getElementById("searchType").value;
-    const apiUrl = `http://localhost:3000/api/superheroes?${searchCharacteristic}=${searchQuery}`;
+// Fetch and render superheroes based on search query.
+function fetchAndRenderSuperheroes(searchQuery) {
+  const searchCharacteristic = document.getElementById("searchType").value;
+  const sortCharacteristic = document.getElementById("sortType").value;
 
-    const heroesList = document.getElementById("heroes-list");
+  // Construct the API URL with search query and sorting.
+  let apiUrl = `http://localhost:3000/api/superheroes?${searchCharacteristic}=${searchQuery}`;
 
-  // Clear the existing content of the <ul> element
+  if (sortCharacteristic) {
+    apiUrl += `&sort=${sortCharacteristic}`;
+  }
+
+  // Clear existing hero list.
+  const heroesList = document.getElementById("heroes-list");
   heroesList.innerHTML = '';
-  
-    console.log(apiUrl);
-    // Fetch JSON data from the Node.js server
-    fetch(apiUrl)
-      .then(response => response.json())
-      .then(data => {
-        // Function to create the HTML for a hero
-        function createHeroElement(heroData) {
-        const heroListItem = document.createElement("li");
-        heroListItem.className = "hero";
 
-        const heroContent = document.createElement("div");
-
-        const heroName = document.createElement("h3");
-        heroName.className = "name";
-        heroName.textContent = heroData.name;
-
-        const heroInfo = document.createElement("p");
-        heroInfo.innerHTML = `ID: ${heroData.id}<br>Race: ${heroData.Race}<br>Publisher: ${heroData.Publisher}`;
-
-        const heroPowers = document.createElement("p");
-        heroPowers.className = "powers";
-        heroPowers.innerHTML = `<strong>Powers:</strong><br>${heroData.powers.join(", ")}`;
-
-        heroContent.appendChild(heroName);
-        heroContent.appendChild(heroInfo);
-        heroContent.appendChild(heroPowers);
-
-        heroListItem.appendChild(heroContent);
-
-        return heroListItem;
-      }
-
-      // Get the container where you want to add the hero elements
-      const heroesList = document.getElementById("heroes-list");
-
-      // Create and append hero elements for each hero in the JSON data
+  // Fetch JSON data from the server and create hero elements.
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      // Create and append hero elements to the list.
       data.forEach(heroData => {
         const heroElement = createHeroElement(heroData);
         heroesList.appendChild(heroElement);
       });
-  
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }
-  
-  function searchHero() {
-    // Get the user input from the text field
-    const searchQuery = document.getElementById("heroInput").value;
-  
-    // Call the fetchAndRenderSuperheroes function with the search query
-    fetchAndRenderSuperheroes(searchQuery);
-  }
-  
-  document.addEventListener("DOMContentLoaded", function () {
-    fetchAndRenderSuperheroes(""); // Initially load all heroes when the page loads
-  });
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+    });
+}
+
+// Create HTML elements for a hero.
+function createHeroElement(heroData) {
+  const heroListItem = document.createElement("li");
+  heroListItem.className = "hero";
+
+  const heroContent = document.createElement("div");
+
+  const heroName = document.createElement("h3");
+  heroName.className = "name";
+  heroName.textContent = heroData.name;
+
+  const heroInfo = document.createElement("p");
+  heroInfo.innerHTML = `ID: ${heroData.id}<br>Race: ${heroData.Race}<br>Publisher: ${heroData.Publisher}`;
+
+  const heroPowers = document.createElement("p");
+  heroPowers.className = "powers";
+  heroPowers.innerHTML = `<strong>Powers:</strong><br>${heroData.powers.join(", ")}`;
+
+  heroContent.appendChild(heroName);
+  heroContent.appendChild(heroInfo);
+  heroContent.appendChild(heroPowers);
+
+  heroListItem.appendChild(heroContent);
+
+  return heroListItem;
+}
+
+// Trigger search when "Search" button is clicked.
+function searchHero() {
+  const searchQuery = document.getElementById("heroInput").value;
+  fetchAndRenderSuperheroes(searchQuery);
+}
