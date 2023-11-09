@@ -18,14 +18,14 @@
     <!--Hero Search Bar-->
     <div class="selects">
         <label for="searchType">Search By:</label>
-        <select name="searchType" id="searchType">
+        <select name="searchType" id="searchType" oninput="searchHero('hero')">
             <option value="name">Name</option>
             <option value="publisher">Publisher</option>
             <option value="race">Race</option>
             <option value="power">Power</option>
         </select>
         <label for="sortType">Sort By:</label>
-        <select name="sortType" id="sortType">
+        <select name="sortType" id="sortType" oninput="searchHero('hero')">
             <option value="name">Name</option>
             <option value="publisher">Publisher</option>
             <option value="race">Race</option>
@@ -33,9 +33,8 @@
         </select>
     </div>
     <div class="input-container">
-        <input type="text" id="heroInput" maxlength="20">
-        <input type="number" id="searchSize" min="0" max="999" placeholder="Size">
-        <button onclick="searchHero('hero')">Search</button>
+        <input type="text" id="heroInput" pattern="[^a-zA-Z0-9]+" maxlength="20" oninput="searchHero('hero')">
+        <input type="number" id="searchSize" min="0" max="999" value="0" oninput="searchHero('hero')">
     </div>
 </div>
 <!-- Hero List -->

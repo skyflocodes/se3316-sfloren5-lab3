@@ -9,6 +9,32 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+const rateLimit = require('express-rate-limit');
+
+// Apply rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // Limit to 100 requests per IP within the window
+});
+
+app.use('/api/', limiter);
+
+const { query, validationResult } = require('express-validator');
+
+// Define a custom sanitizer function to allow only specified characters
+const sanitizeInput = (value) => {
+    if (typeof value === 'string') {
+      // Remove characters that are not a-z, A-Z, 0-9, hyphen (-), or period (.)
+      return value.replace(/[^a-zA-Z0-9\-\.]/g, '');
+    } else if (Array.isArray(value)) {
+      // If it's an array, sanitize each element recursively
+      return value.map((item) => sanitizeInput(item));
+    }
+    return value; // For other data types, return the value unchanged
+  };
+
+
+
 // Define file paths for superhero data
 const DATA_DIR = path.join(__dirname, 'json');
 const SUPERHERO_INFO_FILE = path.join(DATA_DIR, 'superhero_info.json');
@@ -33,7 +59,20 @@ const loadSuperheroData = async () => {
 };
 
 // Define an API endpoint to get a list of superheroes with optional filtering and sorting
-app.get('/api/superheroes', asyncHandler(async (req, res) => {
+app.get('/api/superheroes',
+[
+  query('name').optional().isString().trim().customSanitizer(sanitizeInput),
+  query('power').optional().isString().trim().customSanitizer(sanitizeInput),
+  query('race').optional().isString().trim().customSanitizer(sanitizeInput),
+  query('publisher').optional().isString().trim().customSanitizer(sanitizeInput),
+  query('sort').optional().isString().trim().customSanitizer(sanitizeInput),
+  query('limit').optional().isInt({ min: 0, max: 999 }),
+], asyncHandler(async (req, res) => {
+    // Validate query parameters
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const { superheroes, powers } = await loadSuperheroData();
     const { name, power, race, publisher, sort, limit } = req.query;
 

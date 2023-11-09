@@ -12,6 +12,16 @@ function fetchAndRenderSuperheroes(searchQuery) {
     apiUrl += `&sort=${sortCharacteristic}`;
   }
 
+  const inputField = document.getElementById("heroInput");
+
+  inputField.addEventListener("keydown", function (event) {
+    const disallowedCharacters = /[^a-zA-Z0-9-\.]/g; // Define the characters you want to disallow
+    
+    if (disallowedCharacters.test(event.key)) {
+      event.preventDefault(); // Prevent the character from being inputted
+    }
+  });
+
   // Clear existing hero list.
   const heroesList = document.getElementById("heroes-list");
   heroesList.innerHTML = '';
