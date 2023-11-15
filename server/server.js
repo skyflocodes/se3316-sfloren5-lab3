@@ -12,6 +12,9 @@ const port = 3000;
 app.use(express.json()); // Duplicate line from below was removed
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
+const cors = require('cors');
+app.use(cors());
+
 // Rate limiting middleware
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
