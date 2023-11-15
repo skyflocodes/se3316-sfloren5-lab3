@@ -232,7 +232,7 @@ function displayList() {
 
 // Function to fetch superhero details by ID
 function fetchSuperheroById(superheroId) {
-  const apiUrl = `/api/superheroes?id=${superheroId}`;
+  const apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?id=${superheroId}`;
   
   return fetch(apiUrl)
     .then(response => {
