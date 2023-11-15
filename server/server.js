@@ -27,7 +27,7 @@ const client = new MongoClient(uri, {
 });
 
 // Data directory paths
-const DATA_DIR = ('https://skyflocodes.github.io/CountryAssets/');
+const DATA_DIR = path.join(__dirname, 'json');
 const SUPERHERO_INFO_FILE = path.join(DATA_DIR, 'superhero_info.json');
 const SUPERHERO_POWERS_FILE = path.join(DATA_DIR, 'superhero_powers.json');
 
