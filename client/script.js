@@ -6,7 +6,7 @@ function fetchAndRenderSuperheroes(searchQuery) {
   const searchSize = parseInt(document.getElementById("searchSize").value, 10);
 
   // Construct the API URL with search query and sorting.
-  let apiUrl = `:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
+  let apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
 
   if (sortCharacteristic) {
     apiUrl += `&sort=${sortCharacteristic}`;
