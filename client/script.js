@@ -94,7 +94,7 @@ function displayMessage(message) {
   setTimeout(() => { messageElement.style.display = 'none'; }, 5000); // Message will disappear after 5 seconds
 }
 
-let apiUrl = `/api/lists`;
+let apiUrl = `:3000/api/lists`;
 
 // Create a new list
 function createList() {
