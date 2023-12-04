@@ -17,5 +17,4 @@ secrets.json
 *.bak
 
 # Ignore any other files or directories you want to exclude
-node.js
 node_modules/

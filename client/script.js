@@ -6,8 +6,8 @@ function fetchAndRenderSuperheroes(searchQuery) {
   const searchSize = parseInt(document.getElementById("searchSize").value, 10);
 
   // Construct the API URL with search query and sorting.
-  let apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
-
+  //let apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
+  apiUrl = `http://localhost:3000/api/superheroes?${searchCharacteristic}=${searchQuery}&limit=${searchSize}`;
   if (sortCharacteristic) {
     apiUrl += `&sort=${sortCharacteristic}`;
   }
@@ -94,7 +94,8 @@ function displayMessage(message) {
   setTimeout(() => { messageElement.style.display = 'none'; }, 5000); // Message will disappear after 5 seconds
 }
 
-let apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/lists`;
+//let apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/lists`;
+let apiUrl = `http://localhost:3000/api/lists`;
 
 // Create a new list
 function createList() {
@@ -232,7 +233,8 @@ function displayList() {
 
 // Function to fetch superhero details by ID
 function fetchSuperheroById(superheroId) {
-  const apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?id=${superheroId}`;
+  //const apiUrl = `http://ec2-44-219-158-250.compute-1.amazonaws.com:3000/api/superheroes?id=${superheroId}`;
+  apiUrl = `http://localhost:3000/api/superheroes?id=${superheroId}`;
   
   return fetch(apiUrl)
     .then(response => {
